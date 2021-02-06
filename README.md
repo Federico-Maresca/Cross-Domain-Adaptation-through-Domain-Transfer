@@ -60,4 +60,4 @@ python test.py --config-file configs/your_config_file_here.yaml --ckpt ./outputs
 
 ## MISC
 
-Results for each training are saved to the outputs folder by default, if not otherwised specified in the config file.
+Results for each training are saved to the outputs folder by default, if not otherwise specified in the config file.
