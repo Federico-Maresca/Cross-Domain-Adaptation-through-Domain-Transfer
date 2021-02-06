@@ -55,7 +55,7 @@ python train.py --config-file configs/your_config_file_here.yaml --AdaIN_model .
 
 ```bash
 # for example, evaluate SSD300:
-python test.py --config-file configs/your_config_file_here.yaml
+python test.py --config-file configs/your_config_file_here.yaml --ckpt ./outputs/DA_project_baseline/model_final.pth
 ```
 
 ## MISC
