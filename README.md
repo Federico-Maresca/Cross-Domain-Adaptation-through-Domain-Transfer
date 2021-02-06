@@ -2,17 +2,6 @@
 
 This repository implements [SSD (Single Shot MultiBox Detector)](https://github.com/lufficc/SSD). The implementation is modified to have a new parse argument so as to be able to use an [AdaIN](https://github.com/irasin/Pytorch_AdaIN) model in real time (at batch level) to modify the style of the source images this increasing variability of the source dataset and robustness to cross domain operation.
 
-<div align="center">
-  <img src="figures/004545.jpg" width="500px" />
-  <p>Example SSD output (vgg_ssd300_voc0712).</p>
-</div>
-
-| Losses        | Learning rate | Metrics |
-| :-----------: |:-------------:| :------:|
-| ![losses](figures/losses.png) | ![lr](figures/lr.png) | ![metric](figures/metrics.png) |
-
-
-
 
 ### Installation
 
@@ -52,7 +41,7 @@ The Pascal VOC datasets are kept as the original folders from the PascalVOC webs
 ## TRAINING
 ```bash
 # for example, train SSD300:
-python train.py --config-file configs/your_config_file_here.yaml
+python train.py --config-file configs/your_config_file_here.yaml --ckpt ./outputs/DA_project_baseline/model_final.pth
 ```
 ### Training with AdaIN
 A different adain model may be used however one is already made available in /SSD/ssd/adain
