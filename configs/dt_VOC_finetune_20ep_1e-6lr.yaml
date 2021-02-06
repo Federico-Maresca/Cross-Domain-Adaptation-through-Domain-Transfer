@@ -1,0 +1,15 @@
+MODEL:
+  NUM_CLASSES: 21
+INPUT:
+  IMAGE_SIZE: 300
+DATASETS:
+  TRAIN: ("dt_voc_2007_trainval", "dt_voc_2012_trainval")
+  TEST: ("clipart_test", )
+SOLVER:
+  MAX_ITER: 130360
+  LR_STEPS: [80000, 100000]
+  GAMMA: 0.1
+  BATCH_SIZE: 32
+  LR: 1e-6
+
+OUTPUT_DIR: 'outputs/dt_VOC_finetune_20ep_1e-6lr'

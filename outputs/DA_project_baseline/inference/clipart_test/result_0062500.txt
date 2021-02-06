@@ -1,0 +1,21 @@
+mAP: 0.2815
+aeroplane       : 0.2393
+bicycle         : 0.5675
+bird            : 0.2015
+boat            : 0.2060
+bottle          : 0.1347
+bus             : 0.3774
+car             : 0.3559
+cat             : 0.1039
+chair           : 0.4463
+cow             : 0.0596
+diningtable     : 0.3071
+dog             : 0.1451
+horse           : 0.2988
+motorbike       : 0.4957
+person          : 0.3560
+pottedplant     : 0.2313
+sheep           : 0.1212
+sofa            : 0.2567
+train           : 0.3883
+tvmonitor       : 0.3381
