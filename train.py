@@ -37,9 +37,9 @@ def train(cfg, args):
     save_to_disk = dist_util.get_rank() == 0
     checkpointer = CheckPointer(model, optimizer, scheduler, cfg.OUTPUT_DIR, save_to_disk, logger)
     # Used demo file example to load ckpt arg
-    extra_checkpoint_data = checkpointer.load(ckpt, use_latest=ckpt is None)
+    extra_checkpoint_data = checkpointer.load(args.ckpt, use_latest=args.ckpt is None)
     arguments.update(extra_checkpoint_data)
-    weight_file = ckpt if ckpt else checkpointer.get_checkpoint_file()
+    weight_file = args.ckpt if args.ckpt else checkpointer.get_checkpoint_file()
     logger.info('Loaded weights from {}'.format(weight_file))
 
     max_iter = cfg.SOLVER.MAX_ITER // args.num_gpus
