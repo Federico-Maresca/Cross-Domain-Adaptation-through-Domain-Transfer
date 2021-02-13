@@ -2,8 +2,24 @@
 
 This repository implements [SSD (Single Shot MultiBox Detector)](https://github.com/lufficc/SSD). The implementation is modified to have a new parse argument so as to be able to use an [AdaIN](https://github.com/irasin/Pytorch_AdaIN) model in real time (at batch level) to modify the style of the source images this increasing variability of the source dataset and robustness to cross domain operation.
 
-
-### Installation
+### MAIN MODIFICATIONS TO ORIGINAL CODE
+||SSD
+*modified*
+--train.py
+--test.py
+--train.py
+||ssd
++added+
+--adain/
+--engine/styletransfer.py
+--datasets/clip.py
+*modified*
+--engine/trainer.py
+--config/path_catlog.py
+--data/datasets/voc.py
+--data/datasets/init.py
+--data/build.py
+--utils/checkpoint.py
 
 ```bash
 git clone https://github.com/Federico-Maresca/Domain_Adaptation_Project.git
