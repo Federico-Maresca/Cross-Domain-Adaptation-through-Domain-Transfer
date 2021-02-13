@@ -1,6 +1,6 @@
 # SSD implementation from Luffic with AdaIN option
 
-This repository implements [SSD (Single Shot MultiBox Detector)](https://github.com/lufficc/SSD). The implementation is modified to have a new parse argument so as to be able to use an [AdaIN](https://github.com/irasin/Pytorch_AdaIN) model in real time (at batch level) to modify the style of the source images this increasing variability of the source dataset and robustness to cross domain operation.
+This repository implements [SSD (Single Shot MultiBox Detector)](https://github.com/lufficc/SSD). The implementation is modified to have a new parse argument so as to be able to use an [AdaIN](https://github.com/irasin/Pytorch_AdaIN) model in real time (at batch level) to modify the style of the source images this increasing variability of the source dataset and robustness to cross domain operation. [Paper](https://drive.google.com/file/d/1bSLNHFaw-HXJPNstRJRNo97sxEU9WyCj/view?usp=sharing)
 
 ## Main modifications to original code
 
