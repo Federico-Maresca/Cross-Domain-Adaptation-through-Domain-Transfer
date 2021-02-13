@@ -2,24 +2,39 @@
 
 This repository implements [SSD (Single Shot MultiBox Detector)](https://github.com/lufficc/SSD). The implementation is modified to have a new parse argument so as to be able to use an [AdaIN](https://github.com/irasin/Pytorch_AdaIN) model in real time (at batch level) to modify the style of the source images this increasing variability of the source dataset and robustness to cross domain operation.
 
-### MAIN MODIFICATIONS TO ORIGINAL CODE
-||SSD
-*modified*
---train.py
---test.py
---train.py
-||ssd
-+added+
---adain/
---engine/styletransfer.py
---datasets/clip.py
-*modified*
---engine/trainer.py
---config/path_catlog.py
---data/datasets/voc.py
---data/datasets/init.py
---data/build.py
---utils/checkpoint.py
+## Main modifications to original code
+
+### SSD/
+
+#### *Modified*
+
+train.py
+
+
+### SSD/ssd/
+
+#### *Added*
+
+adain/
+
+engine/styletransfer.py
+
+datasets/clip.py
+
+
+#### *Modified*
+
+engine/trainer.py
+
+config/path_catlog.py
+
+data/datasets/voc.py
+
+data/datasets/init.py
+
+data/build.py
+
+## Installation
 
 ```bash
 git clone https://github.com/Federico-Maresca/Domain_Adaptation_Project.git
@@ -77,3 +92,14 @@ python test.py --config-file configs/your_config_file_here.yaml --ckpt ./outputs
 ## MISC
 
 Results for each training are saved to the outputs folder by default, if not otherwise specified in the config file.
+
+## USEFUL LINKS
+
+### Models Used
+
+[SSD Baseline](https://drive.google.com/file/d/1TuOw-bpjTKeEvv6SoH13ebhIGjEyt9E0/view?usp=sharing "Google's Homepage")
+
+This should be put inside SSD/ssd/adain/
+[Adain Model](https://drive.google.com/file/d/1hF72ulvKh3M7sQgRTM0ulV2aAZteGick/view?usp=sharing)
+
+
