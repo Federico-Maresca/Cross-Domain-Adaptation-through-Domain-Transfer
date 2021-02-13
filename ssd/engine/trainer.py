@@ -5,6 +5,7 @@ import os
 import time
 import torch
 import torch.distributed as dist
+import random
 
 from ssd.engine.inference import do_evaluation
 #import custom adain transformation
@@ -49,10 +50,10 @@ def reduce_loss_dict(loss_dict):
         reduced_losses = {k: v for k, v in zip(loss_names, all_losses)}
     return reduced_losses
 
-
+''' CHANGED TO HAVE THE STYLE LOADER NECESSARY FOR THE ADAIN '''
 def do_train(cfg, model,
              data_loader,
-             style_loader, #added style loader
+             style_loader, 
              optimizer,
              scheduler,
              checkpointer,
@@ -73,7 +74,8 @@ def do_train(cfg, model,
         summary_writer = SummaryWriter(log_dir=os.path.join(cfg.OUTPUT_DIR, 'tf_logs'))
     else:
         summary_writer = None
-    #Added AdaIN option
+
+    ''' THE ADAIN MODEL IS LOADED HERE '''
     
     if args.AdaIN_model != "None":
         model_AdaIN = Model()
@@ -87,14 +89,16 @@ def do_train(cfg, model,
     for iteration, (images, targets, _) in enumerate(data_loader, start_iter):
         iteration = iteration + 1
         arguments["iteration"] = iteration
-
         
-        #AdaIN transformation
+        ''' WITH A PROBABILITY OF 0.5 THE BATCH IS STYLE TRANSFERRED 
+            IF THERE IS AN ADAIN MODEL                               '''
+
         #choose a random style image from the style_loader
         if args.AdaIN_model != "None":
             #print("Applying transformation to current batch ")
-            style_sets = next(iter(style_loader))
-            adain_transfer(images, style_sets[0], model_AdaIN)
+            if random.random()< 0.5:
+              style_sets = next(iter(style_loader))
+              adain_transfer(images, style_sets[0], model_AdaIN)
         #-------------------------------
         
         images = images.to(device)
@@ -124,7 +128,7 @@ def do_train(cfg, model,
                 logger.info(
                     meters.delimiter.join([
                         "iter: {iter:06d}",
-                        "lr: {lr:.5f}",
+                        "lr: {lr:.7f}",
                         '{meters}',
                         "eta: {eta}",
                         'mem: {mem}M',
@@ -140,7 +144,7 @@ def do_train(cfg, model,
                 logger.info(
                     meters.delimiter.join([
                         "iter: {iter:06d}",
-                        "lr: {lr:.5f}",
+                        "lr: {lr:.7f}",
                         '{meters}',
                         "eta: {eta}",
                     ]).format(
@@ -160,7 +164,7 @@ def do_train(cfg, model,
         if iteration % args.save_step == 0:
             checkpointer.save("model_{:06d}".format(iteration), **arguments)
 
-        if args.eval_step > 0 and (iteration == (120000 + (args.eval_step / 5)) or iteration % args.eval_step == 0) and not iteration == max_iter:
+        if args.eval_step > 0 and (iteration == (120000 + (args.eval_step / 5)) or (iteration - 120000) % args.eval_step == 0) and not iteration == max_iter:
             eval_results = do_evaluation(cfg, model, distributed=args.distributed, iteration=iteration)
             if dist_util.get_rank() == 0 and summary_writer:
                 for eval_result, dataset in zip(eval_results, cfg.DATASETS.TEST):

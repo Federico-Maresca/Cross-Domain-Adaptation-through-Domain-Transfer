@@ -94,6 +94,7 @@ class VOCDataset(torch.utils.data.Dataset):
         im_info = tuple(map(int, (size.find("height").text, size.find("width").text)))
         return {"height": im_info[0], "width": im_info[1]}
 
+''' THIS FILE IS MODIFIED HERE TO BE ABLE TO READ PNG FILES THAT ARE SAVED FROM CYCLEGAN '''
     def _read_image(self, image_id):
         if 'dt_clipart' in self.data_dir:
             image_file = os.path.join(self.data_dir, "JPEGImages", "%s.png" % image_id)

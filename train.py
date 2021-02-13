@@ -26,25 +26,43 @@ def train(cfg, args):
     if args.distributed:
         model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
-    
+
     lr = cfg.SOLVER.LR * args.num_gpus  # scale by num gpus
+    logger.info('Variable lr: {}'.format(lr))
     optimizer = make_optimizer(cfg, model, lr)
 
     milestones = [step // args.num_gpus for step in cfg.SOLVER.LR_STEPS]
     scheduler = make_lr_scheduler(cfg, optimizer, milestones)
+    logger.info('Learning Rate {}'.format(scheduler.get_lr()))
 
     arguments = {"iteration": 0}
     save_to_disk = dist_util.get_rank() == 0
+
     checkpointer = CheckPointer(model, optimizer, scheduler, cfg.OUTPUT_DIR, save_to_disk, logger)
-    # Used demo file example to load ckpt arg
     extra_checkpoint_data = checkpointer.load(args.ckpt, use_latest=args.ckpt is None)
     arguments.update(extra_checkpoint_data)
     weight_file = args.ckpt if args.ckpt else checkpointer.get_checkpoint_file()
     logger.info('Loaded weights from {}'.format(weight_file))
 
+    '''
+    IF A PRETRAINED MODEL IS USED THEN THE ORIGINAL CODE OVERRIDES LEARNING RATE AND SCHEDULER
+    INFORMATION. THIS CODE SNIPPET ALLOWS US TO RELOAD OUR OWN CONFIGURATION
+    '''
+    if args.ckpt is not None:
+      optimizer = make_optimizer(cfg, model, lr)
+      logger.info("Loading optimizer from {}".format(args.ckpt))
+      scheduler = make_lr_scheduler(cfg, optimizer, milestones)
+      logger.info("Loading scheduler from {}".format(args.ckpt))
+      checkpointer.scheduler_opt(scheduler, optimizer)
+      
+    logger.info('After Checkpoint Learning Rate {}'.format(scheduler.get_lr()))
+
     max_iter = cfg.SOLVER.MAX_ITER // args.num_gpus
     train_loader = make_data_loader(cfg, is_train=True, distributed=args.distributed, max_iter=max_iter, start_iter=arguments['iteration'], isStyle = False)
     
+    '''
+    IF AN ADAIN MODEL IS SPECIFIED IT IS NECESSARY TO LOAD A STYLE_LOADER WHICH IS COMPRISED OF STYLE IMAGES TO BE USED DURING TRAINING
+    '''
     if args.AdaIN_model != "None":
       style_loader = make_data_loader(cfg, is_train=True, distributed=args.distributed, max_iter=max_iter, start_iter=arguments['iteration'], isStyle = True)
     else:
@@ -67,26 +85,30 @@ def main():
     parser.add_argument('--save_step', default=2500, type=int, help='Save checkpoint every save_step')
     parser.add_argument('--eval_step', default=2500, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
     parser.add_argument('--use_tensorboard', default=True, type=str2bool)
-    parser.add_argument("--ckpt", type=str, default=None, help="Trained weights.")
-    parser.add_argument(
-        "--skip-test",
-        dest="skip_test",
-        help="Do not test the final model",
-        action="store_true",
-    )
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
         default=None,
         nargs=argparse.REMAINDER,
     )
-    #added options
+    '''
+    ADDED COMMAND LINE ARGUMENTS
+    ADAIN_MODEL TAKES PATH TO AN ADAIN MODEL
+    CKPT LOADS A PRETRAINED SSD MODEL
+    '''
     parser.add_argument(
         "--AdaIN_model",
         default="None",
         metavar="FILE",
         help="path to AdaIN model file",
         type=str,
+    )
+    parser.add_argument("--ckpt", type=str, default=None, help="Trained weights.")
+    parser.add_argument(
+        "--skip-test",
+        dest="skip_test",
+        help="Do not test the final model",
+        action="store_true",
     )
     args = parser.parse_args()
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1

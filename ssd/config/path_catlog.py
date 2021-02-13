@@ -4,7 +4,9 @@ import os
 class DatasetCatalog:
     DATA_DIR = '/content/drive/MyDrive/Cross_Domain_project/dataset'
     DATASETS = {
-        #added datasets ----------#
+        '''
+        #---ADDED DATASET INFORMATION ---#
+        '''
         'clipart_train': {
             "data_dir": "clipart",
             "split": "train"
@@ -21,7 +23,9 @@ class DatasetCatalog:
             "data_dir": "dt_clipart/VOC2012",
             "split": "trainval"
         },
+        '''
         ##------------------------##
+        '''
         'voc_2007_train': {
             "data_dir": "VOC2007",
             "split": "train"
@@ -85,6 +89,9 @@ class DatasetCatalog:
                 split=attrs["split"],
             )
             return dict(factory="VOCDataset", args=args)
+            '''
+            ADDED CLIPART DATASET GETTER
+            '''
         elif "clipart" in name:
             clipart_root = DatasetCatalog.DATA_DIR
             if 'CLIPART_ROOT' in os.environ:

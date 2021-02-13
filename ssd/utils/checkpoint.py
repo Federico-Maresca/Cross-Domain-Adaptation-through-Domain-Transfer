@@ -66,15 +66,20 @@ class CheckPointer:
             model = self.model.module
 
         model.load_state_dict(checkpoint.pop("model"))
-        if "optimizer" in checkpoint and self.optimizer:
+      
+        if "optimizer" in checkpoint and self.optimizer and use_latest:
             self.logger.info("Loading optimizer from {}".format(f))
             self.optimizer.load_state_dict(checkpoint.pop("optimizer"))
-        if "scheduler" in checkpoint and self.scheduler:
+        if "scheduler" in checkpoint and self.scheduler and use_latest:
             self.logger.info("Loading scheduler from {}".format(f))
             self.scheduler.load_state_dict(checkpoint.pop("scheduler"))
 
         # return any further checkpoint data
         return checkpoint
+
+    def scheduler_opt(self, scheduler=None, optimizer=None):
+        self.scheduler = scheduler
+        self.optimizer = optimizer
 
     def get_checkpoint_file(self):
         save_file = os.path.join(self.save_dir, self._last_checkpoint_name)

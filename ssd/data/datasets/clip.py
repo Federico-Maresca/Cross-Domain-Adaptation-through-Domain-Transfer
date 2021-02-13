@@ -7,7 +7,7 @@ from PIL import Image
 
 from ssd.structures.container import Container
 
-
+''' THIS FILE IS A CLONE FROM VOC.PY TO ALLOW US TO READ THE CLIPART DATASET '''
 class CLIPDataset(torch.utils.data.Dataset):
     class_names = ('__background__',
                    'aeroplane', 'bicycle', 'bird', 'boat',

@@ -35,7 +35,7 @@ def adain_transfer(content_batch, style_batch, model_AdaIN):
     # process each content image one by one 
     random.seed()
     for i in range(n_content):
-        
+
         j = random.randrange(n_style)
 
         # batch tensors have shape [32, 3, 300, 300]
@@ -46,6 +46,7 @@ def adain_transfer(content_batch, style_batch, model_AdaIN):
         style = trans(style).unsqueeze(0).to(device)
 
         #print("Content size after trans:{}\nStyle size after trans:{} ".format(content.size(),style.size()))
+        ''' Added interpolation layer since images from AdaIN return with size 296*296'''
         with torch.no_grad():
               content = F.interpolate(model_AdaIN.generate(content, style, 1), size=[300, 300])
         #print("Content size after denorm:{}".format(content.size()))

@@ -1,0 +1,16 @@
+MODEL:
+  NUM_CLASSES: 21
+INPUT:
+  IMAGE_SIZE: 300
+DATASETS:
+  TRAIN: ("clipart_train",)
+  TEST: ("clipart_test", )
+SOLVER:
+  MAX_ITER: 121280
+  LR_STEPS: [80000, 100000]
+  GAMMA: 0.1
+  BATCH_SIZE: 8
+  LR: 1e-5
+  WARMUP_ITERS: 0
+
+OUTPUT_DIR: 'outputs/Ideal_clipart_batch8'
